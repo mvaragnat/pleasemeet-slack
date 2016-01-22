@@ -1,0 +1,21 @@
+{
+  "name": "bepolite",
+  "version": "0.1.0",
+  "description": "The proper way to make intros",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "slack"
+  ],
+  "author": "Matthieu Varagnat",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.14.2",
+    "ejs": "^2.3.4",
+    "express": "^4.13.4",
+    "mongodb": "^2.1.4",
+    "mongoose": "^4.3.6"
+  }
+}

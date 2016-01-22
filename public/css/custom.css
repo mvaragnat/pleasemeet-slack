@@ -1,0 +1,122 @@
+body{
+  padding-top: 0px;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background-color: #38CDFF;
+}
+
+/* header */
+.navbar-style{
+  background-color: #38CDFF;
+  /*margin-bottom: thick solid #FFF;*/
+}
+.brand {
+  color: #FFF;
+  font-weight: bold;
+  font-size: 2em;
+}
+.header-links{
+  color: #FFF !important;
+  font-weight: bold;
+  font-size: 1.5em;
+}
+
+/*sections*/
+.sectionwelcome{
+  height: 630px;
+}
+
+/* image */
+.shadow{
+  box-shadow: 0px 0px 20px 10px rgba(76,132,178,0.8);
+}
+.circle{
+  border-radius: 100%;
+  max-width: 150px;
+  max-height: 150px;
+}
+
+/* color */
+.fondblanc{
+  background-color: #FFF;
+  padding: 20px;
+  border-radius: 25px;
+  color: #666;
+}
+.fondbleu{
+  background-color: #38CDFF;
+  padding: 20px;
+  border-radius: 25px;
+  color: #FFF;
+}
+.codeblock{
+  background-color: #EEE;
+  padding: 5px;
+  font-family: Arial;
+}
+.pricing-beta{
+  background-color: #EEE;
+}
+
+/* bouton */
+.btncustom{
+  background-color: #CA278C;
+  border-radius: 5px;
+  padding: 5px 25px;
+  font-size: 22px;
+  text-decoration: none;
+  color: #fff;
+}
+
+.btncustom2{
+  background-color: #38CDFF;
+  border-radius: 5px;
+  padding: 5px 25px;
+  font-size: 22px;
+  text-decoration: none;
+  color: #fff;
+  border: solid #FFF;
+}
+
+.btncustom3{
+  background-color: #FFF;
+  border-radius: 5px;
+  padding: 5px 25px;
+  font-size: 22px;
+  text-decoration: none;
+  color: #38CDFF;
+  border: solid #FFF;
+}
+
+/* spacer */
+
+.spacer {margin-top: 65px;}
+.spacer1 {margin-top: 50px;}
+.spacer2 {margin-top: 30px;}
+.spacer3 {margin-top: 20px;}
+
+/* form */
+.input {
+  width: 75%;
+}
+
+/* FAQ page */
+.question{
+  padding: 15px;
+}
+
+.answer{
+  display: none;
+  /*text-align: right;
+  color: #ffffff;
+  background-color: #71A9F7;
+  border-color: #e83f6f;
+  border-radius: 25px;
+  padding: 10px;
+  margin: 5px;*/
+}
+.answer-list{
+  text-align: left;
+}
+.details{
+  font-style: italic;
+}
