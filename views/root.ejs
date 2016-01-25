@@ -1,60 +1,75 @@
 <!DOCTYPE html>
 <html dir="ltr" lang="en-US">
 
-    <body class="stretched no-transition">
+  <!-- HEAD, META
+  ============================================= -->
+  <% include ./partials/head %>
 
-        <!-- Content
-        ============================================= -->
-        <section id="content">
+  <body class="stretched no-transition">
 
-          <div class="content-wrap">
+    <!-- Header
+    ============================================= -->
+    <% include ./partials/header %>
 
-            <section id="section-about" class="page-section">
 
-              <div class="container clearfix">
+    <!-- Content
+    ============================================= -->
+    <section id="content">
 
-                <div class="col_full nobottommargin">
-                    <div class="heading-block center">
-                        <h2>BePolite</h2>
-                        <h2>The proper way to do intros</h2>
-                    </div>
-                    <div class="spacer3"></div>
+      <div class="content-wrap">
 
-                        <h4>Do intros from Slack</h4>
-                        <h4>Opt-in intros: ask permission to intro, don't be a jerk</h4>
+        <section id="section-about" class="page-section">
 
-                    <div class="spacer3"></div>
+          <div class="container clearfix">
 
+            <div class="col_full nobottommargin">
+                <div class="heading-block center">
+                    <h2>BePolite</h2>
+                    <h2>Send opt-in intros from Slack</h2>
                 </div>
+                <div class="spacer3"></div>
 
-                <center>
-                    <a href='https://slack.com/oauth/authorize?client_id=<%= process.env.SLACK_ID %>&redirect_uri=<%= redirect_uri %>&scope=commands'><img alt="Add to Slack" height="40" width="139" src="/images/add_to_slack.png"></a>
-                </center>
+                    <h4>Opt-in is the right way to intro. Ask permission, don't impose yourself</h4>
+                    <h4>It's really simple. Intro person A to person B, for a certain reason, with command:</h4>
+                    <h4 class="codeblock">/intro person_A person_B Reason </h4>
+                    <ul>
+                      <li><i>person_A</i> and <i>person_B</i> can be either emails, or Slack handles</li>
+                      <li>B will receive an email or a DM, asking her permission to get intro'ed</li>
+                      <li>If she accepts, A and B will be put in touch by email or DM</li>
 
                 <div class="spacer3"></div>
 
-                <center>
-                    <a href=''>The Story of this app</a>
-                </center>
+            </div>
 
-              </div>
+            <center>
+                <a href='https://slack.com/oauth/authorize?client_id=<%= process.env.SLACK_ID %>&redirect_uri=<%= redirect_uri %>&scope=commands'><img alt="Add to Slack" height="40" width="139" src="/images/add_to_slack.png"></a>
+            </center>
 
+            <div class="spacer3"></div>
 
-
-            </section>
-
+            <center>
+                <a href=''>The Story of this app</a>
+            </center>
 
           </div>
 
-        </section><!-- #content end -->
-
-        <!-- Footer
-        ============================================= -->
-
-      </div><!-- #wrapper end -->
 
 
-    </body>
+        </section>
+
+
+        </div>
+
+      </section><!-- #content end -->
+
+      <!-- Footer
+      ============================================= -->
+      <% include ./partials/footer %>
+
+    </div><!-- #wrapper end -->
+
+
+  </body>
 </html>
 
 

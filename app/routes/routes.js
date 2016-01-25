@@ -30,7 +30,8 @@ module.exports = function(app) {
 
   // post from Slack command
   app.post('/intro', function(req, res) {
-    console.log("root")
+    console.log("Command received")
+    console.log(req.body)
     res.render('root');
   });
 

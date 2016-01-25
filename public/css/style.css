@@ -70,6 +70,10 @@
 	background: #eee;
 }
 
+.whitebackground {
+  background: #fff;
+}
+
 /* Text Background */
 
 /* Text */
@@ -133,6 +137,11 @@ dl, dt, dd, ol, ul, li {
 
 :active,
 :focus { outline: none !important; }
+
+/* Navbar */
+.navbar-height{
+	height: 50px;
+}
 
 
 /* ----------------------------------------------------------------
