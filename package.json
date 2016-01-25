@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.14.2",
+    "dotenv": "^2.0.0",
     "ejs": "^2.3.4",
     "emailjs": "^1.0.1",
     "express": "^4.13.4",

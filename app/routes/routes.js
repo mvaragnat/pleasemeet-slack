@@ -1,14 +1,11 @@
-var SlackConfig = require('../../config/slack')
-var EmailConfig = require('../../config/email')
-
 var Request = require('request');
 var mongoose = require('mongoose');
 var Email   = require("emailjs/email");
 
 var EmailServer  = Email.server.connect({
-   user:     EmailConfig.username,
-   password: EmailConfig.password,
-   host:     EmailConfig.emailHost,
+   user:     process.env.EMAIL_USERNAME,
+   password: process.env.EMAIL_PASSWORD,
+   host:     process.env.EMAIL_HOST,
    ssl:      true
 });
 
@@ -22,16 +19,19 @@ module.exports = function(app) {
     res.render('root'); // load view/root.html file
   });
 
-  app.get('/intro', function(req, res) {
+  // post from Slack command
+  app.post('/intro', function(req, res) {
     console.log("root")
-    res.render('root'); // load view/root.html file
+    res.render('root');
   });
 
+  //answer YES from email or DM
   app.get('/yes', function(req, res) {
     console.log("root")
     res.render('root'); // load view/root.html file
   });
 
+  //answer NO from email or DM
   app.get('/no', function(req, res) {
     console.log("root")
     res.render('root'); // load view/root.html file
@@ -58,8 +58,8 @@ module.exports = function(app) {
   var perform_auth = function(auth_code, res){
     //post code, app ID, and app secret, to get token
     var auth_adresse = 'https://slack.com/api/oauth.access?'
-    auth_adresse += 'client_id=' + SlackConfig.appClientID
-    auth_adresse += '&client_secret=' + SlackConfig.appClientSecret
+    auth_adresse += 'client_id=' + process.env.SLACK_ID
+    auth_adresse += '&client_secret=' + process.env.SLACK_SECRET
     auth_adresse += '&code=' + auth_code
     auth_adresse += '&redirect_uri=' + url + "new"
 

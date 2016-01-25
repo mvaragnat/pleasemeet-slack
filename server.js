@@ -2,9 +2,15 @@
 var express        = require('express');
 var app            = express();
 var bodyParser     = require('body-parser');
-var http = require('http').Server(app);
+var http           = require('http').Server(app);
+var dotenv         = require('dotenv');
 
 // configuration ===========================================
+
+//load environment variables,
+//either from .env files (development),
+//heroku environment in production, etc...
+dotenv.load();
 
 // public folder for images, css,...
 app.use(express.static(__dirname + '/public'))
