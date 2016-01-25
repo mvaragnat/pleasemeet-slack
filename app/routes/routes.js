@@ -1,6 +1,7 @@
-var Request = require('request');
-var mongoose = require('mongoose');
-var Email   = require("emailjs/email");
+var Request   = require('request');
+var mongoose  = require('mongoose');
+var Email     = require("emailjs/email");
+var Team      = require('../models/team')
 
 var EmailServer  = Email.server.connect({
    user:     process.env.EMAIL_USERNAME,
@@ -11,12 +12,20 @@ var EmailServer  = Email.server.connect({
 
 // frontend routes =========================================================
 module.exports = function(app) {
+  if(process.env.NODE_ENV == "production"){
+    var url = process.env.SLACK_REDIRECT
+  }
+  else{
+    var url = "http://localhost:5000/"
+  }
 
   //public pages=============================================
   //root
   app.get('/', function(req, res) {
     console.log("root")
-    res.render('root'); // load view/root.html file
+    var redirect = url + "new"
+
+    res.render('root', {redirect_uri: redirect}); // load view/root.html file
   });
 
   // post from Slack command
@@ -39,7 +48,7 @@ module.exports = function(app) {
 
   //new user creation - redirection from Slack
   app.get('/new', function(req, res) {
-    console.log("================== START USER CREATION ==================")
+    console.log("================== START TEAM REGISTRATION ==================")
     //temporary authorization code
     var auth_code = req.query.code
 
@@ -63,10 +72,6 @@ module.exports = function(app) {
     auth_adresse += '&code=' + auth_code
     auth_adresse += '&redirect_uri=' + url + "new"
 
-    if(contact_id){
-      auth_adresse += "/" + contact_id
-    }
-
     Request.get(auth_adresse, function (error, response, body) {
       if (error){
         console.log(error)
@@ -76,14 +81,45 @@ module.exports = function(app) {
       else{
         var _body = JSON.parse(body)
         console.log("New user auth")
+        console.log(_body)
 
-        //if auth accepted
-        //now we have token and team info
-        if(_body.access_token){
-          res.redirect('/')
-        }
+        register_team(_body.access_token, _body.team_name, _body.team_id, res)
       }
     })
   }
 
+  var register_team = function(token, name, id, res){
+
+    Team.findOrCreate({team_id: id}, //search option. User is identified by team id
+                      {
+                        access_token: token, //added on creation
+                        team_name: name
+                      }, function(err, team, created) {
+      if(created){
+        console.log(name + ": new team registered")
+        console.log(team)
+        //add a thank you / confirmation note
+        res.redirect('/')
+      }
+      else{
+        console.log(name + ": team already exists")
+
+        //update parameters
+        team.team_name = name
+        team.access_token = token
+
+        team.save(function(err){
+          if (err){
+            console.log(err)
+            res.sendStatus(500)
+          }
+          else{
+            console.log(name + ": info updated")
+            //add a thank you / confirmation note
+            res.redirect('/')
+          }
+        })
+      }
+    })
+  }
 }
