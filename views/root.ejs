@@ -31,24 +31,24 @@
 
                     <h4>Opt-in is the right way to intro. Ask permission, don't impose yourself</h4>
                     <h4>It's really simple. Intro person A to person B, for a certain reason, with command:</h4>
-                    <h4 class="codeblock">/intro person_A person_B Reason </h4>
+                    <h4 class="codeblock">/intro email_A email_B Reason </h4>
                     <ul>
-                      <li><i>person_A</i> and <i>person_B</i> can be either emails, or Slack handles</li>
-                      <li>B will receive an email or a DM, asking her permission to get intro'ed</li>
-                      <li>If she accepts, A and B will be put in touch by email or DM</li>
+                      <li>B will receive an email, asking her permission to get intro'ed</li>
+                      <li>If she accepts, A and B will be put in touch</li>
+                    </ul>
 
                 <div class="spacer3"></div>
 
             </div>
 
             <center>
-                <a href='https://slack.com/oauth/authorize?client_id=<%= process.env.SLACK_ID %>&redirect_uri=<%= redirect_uri %>&scope=commands'><img alt="Add to Slack" height="40" width="139" src="/images/add_to_slack.png"></a>
+                <a href='https://slack.com/oauth/authorize?client_id=<%= process.env.SLACK_ID %>&redirect_uri=<%= process.env.SLACK_REDIRECT + "new" %>&scope=commands'><img alt="Add to Slack" height="40" width="139" src="/images/add_to_slack.png"></a>
             </center>
 
             <div class="spacer3"></div>
 
             <center>
-                <a href=''>The Story of this app</a>
+                <a href=''>The story of BePolite on Medium</a>
             </center>
 
           </div>
