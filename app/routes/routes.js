@@ -66,15 +66,15 @@ module.exports = function(app) {
               res.send(500)
             }
             else{
-              //then send email
-              send_permission_email(user_name, team_name, email_A, email_B, reason, intro, function(err){
+              //then send emails
+              send_permission_emails(user_name, team_name, email_A, email_B, reason, intro, function(err){
                 if(err){
                   console.log(err)
                   res.send(500)
                 }
                 else{
                   console.log(team_name + ": sent an intro on " + intro.createdAt)
-                  res.send("I have sent a request to " + email_B + ", asking permission to be introduced to " + email_A + ", with text: " + reason)
+                  res.send("I have sent a request to " + email_A + " and " + email_B + ", asking permission to introduce them, with text: " + reason)
                 }
               })
             }
@@ -110,12 +110,24 @@ module.exports = function(app) {
   var create_intro = function(user_name, user_id, team_name, team_id, email_A, email_B, reason, cb){
     //function(err, intro)
     //always find people by user_id + team_id pair
+    person_A = {
+      email: email_A,
+      status: "Pending",
+      email_token: randomInt(10000)
+    }
+
+    person_B = {
+      email: email_B,
+      status: "Pending",
+      email_token: randomInt(10000)
+    }
+
     Intro.create({user_name: user_name,
                   user_id: user_id,
                   team_name: team_name,
                   team_id: team_id,
-                  email_A: email_A,
-                  email_B: email_B,
+                  person_A: person_A,
+                  person_B: person_B,
                   reason: reason}, function(err, intro) {
       if(err){
         cb(err, null)
@@ -127,24 +139,32 @@ module.exports = function(app) {
     })
   }
 
-  var send_permission_email = function(user_name, team_name, email_A, email_B, reason, intro, cb){
-    var email_text = "<!DOCTYPE html><html><head><meta content='text/html;charset=UTF-8' http-equiv='Content-Type'/></head>"
-    email_text += "<body><div>Dear Madam/Sir,</div>"
-    email_text += "<div>" + user_name + " from " + team_name + " thought you might be interested in being introduced to someone new (" + email_A + ").</div>"
-    email_text += "<div>" + user_name + " sent this message:</div>"
-    email_text += "<div>" + reason + "</div>"
-    email_text += "<div>Are you interested in this introduction?</div>"
-    email_text += "<div><a href='http://bepolite.herokuapp.com/yes/" + intro._id + "'>ACCEPT</a> or <a href='http://bepolite.herokuapp.com/no/" + intro._id + "'>DECLINE</a>\n\n"
-    email_text += "</div>"
-    email_text += "<div><small>Discover <a href='http://bepolite.herokuapp.com'>BePolite</a>, a service by <a href='http://www.smooz.io'>Smooz</a></small></div>"
-    email_text += "</body></html>"
+  var send_permission_emails = function(user_name, team_name, email_A, email_B, reason, intro, cb){
 
+    var email_text = "<!DOCTYPE html><html><head><meta content='text/html;charset=UTF-8' http-equiv='Content-Type'/></head>"
+    email_text += "<body><div>Dear Madam/Sir,</div><div></div>"
+    email_text += "<div>" + user_name + " from " + team_name + " thought you might be interested in being introduced to someone new.</div><div></div>"
+    email_text += "<div><i>" + reason + "</i></div><div></div>"
+    email_text += "<div>Are you interested in this introduction?</div><div></div>"
+
+    //this part is the only variant between the two emails--------
+    var email_text2_A = "<div><a href='http://pleasemeet.herokuapp.com/yes/" + intro._id + "/" + intro.person_A.email_token + "'>ACCEPT</a>"
+    email_text2_A += " or <a href='http://pleasemeet.herokuapp.com/no/" + intro._id + "/" + intro.person_A.email_token + "'>DECLINE</a></div>"
+
+    var email_text2_B = "<div><a href='http://pleasemeet.herokuapp.com/yes/" + intro._id + "/" + intro.person_B.email_token + "'>ACCEPT</a>"
+    email_text2_B += " or <a href='http://pleasemeet.herokuapp.com/no/" + intro._id + "/" + intro.person_B.email_token + "'>DECLINE</a></div>"
+    //-------------------
+
+    var email_text3 = "<div><small>Discover <a href='http://pleasemeet.herokuapp.com'>Please Meet</a>, a service by <a href='http://www.smooz.io'>Smooz</a></small></div>"
+    email_text3 += "</body></html>"
+
+    //email to A
     EmailServer.send({
-      text:    email_text,
+      text:    email_text + email_text2_A + email_text3,
       from:    user_name + " from " + team_name + " <contact@smooz.io>",
-      to:      email_B,
+      to:      email_A,
       bcc:      "Matthieu <matthieu@smooz.io>",
-      subject: user_name + " from " + team_name + " would like to introduce someone to you",
+      subject: user_name + " would like to introduce someone to you",
       "content-type": 'text/html;charset=UTF-8'
     }, function(err, message) {
       if(err){
@@ -152,23 +172,136 @@ module.exports = function(app) {
       }
       else{
         console.log(message)
-        cb()
+
+        //email to B
+        EmailServer.send({
+            text:    email_text + email_text2_B + email_text3,
+            from:    user_name + " from " + team_name + " <contact@smooz.io>",
+            to:      email_B,
+            bcc:      "Matthieu <matthieu@smooz.io>",
+            subject: user_name + " would like to introduce someone to you",
+            "content-type": 'text/html;charset=UTF-8'
+          }, function(err, message) {
+            if(err){
+              cb(err)
+            }
+            else{
+              console.log(message)
+              cb()
+            }
+        })
       }
     });
   }
 
 
   //answer YES from email or DM
-  app.get('/yes', function(req, res) {
-    console.log("root")
-    res.render('root'); // load view/root.html file
+  app.get('/yes/:intro_id/:email_token', function(req, res) {
+    intro_reply(req.params.intro_id, req.params.email_token, true, res)
   });
 
   //answer NO from email or DM
-  app.get('/no', function(req, res) {
-    console.log("root")
-    res.render('root'); // load view/root.html file
+  app.get('/no/:intro_id/:email_token', function(req, res) {
+    intro_reply(req.params.intro_id, req.params.email_token, true, res)
   });
+
+  var intro_reply = function(id, token, accepted, res){
+    var id = mongoose.Types.ObjectId(id)
+
+    Intro.findOne({_id: id}, function(err, intro){
+      if(err){
+        console.log(err)
+        res.sendCode(500)
+      }
+      else if(!intro){
+        console.log("Received yes but could not find intro: " + id)
+        res.sendCode(404)
+      }
+      else{
+        if(token == intro.person_A.email_token){
+          console.log("A said " + accepted + " to intro: " + id)
+
+          save_intro_status(intro, "A", accepted)
+          res.send("Thank you")
+        }
+        else if(token == intro.person_B.email_token){
+          console.log("B said " + accepted + " to intro: " + id)
+
+          save_intro_status(intro, "B", accepted)
+          res.send("Thank you")
+        }
+        else {
+          console.log("Received " + accepted + " for intro " + id + " but could not find token matching " + token)
+          res.sendCode(404)
+        }
+      }
+    })
+  }
+
+  var save_intro_status = function(intro, person_code, accepted){
+    if(person_code == "A"){
+      if(accepted){
+        intro.person_A.status = "Accepted"
+        if(intro.person_B.status == "Accepted"){
+          intro.status = "Accepted"
+          send_intro_email(intro)
+        }
+      }
+      else{
+        intro.person_A.status = "Declined"
+        intro.status = "Declined"
+      }
+    }
+    else if(person_code == "B"){
+      if(accepted){
+        intro.person_B.status = "Accepted"
+        if(intro.person_A.status == "Accepted"){
+          intro.status = "Accepted"
+          send_intro_email(intro)
+        }
+      }
+      else{
+        intro.person_B.status = "Declined"
+        intro.status = "Declined"
+      }
+    }
+    else{
+      console.log("Error with saving intro, person: " + person)
+    }
+
+    intro.save(function(err){
+      console.log("Intro updated with reply")
+    })
+  }
+
+  var send_intro_email = function(intro){
+    var email_text = "<!DOCTYPE html><html><head><meta content='text/html;charset=UTF-8' http-equiv='Content-Type'/></head>"
+    email_text += "<body><div>" + intro.user_name + ", from " + intro.team_name + ", thought you should be introduced to each other.</div><div></div>"
+    email_text += "<div><i>" + intro.reason + "</i></div><div></div>"
+    email_text += "<div>Please meet :-)</div><div></div>"
+    email_text += "<div><small>Discover <a href='http://pleasemeet.herokuapp.com'>Please Meet</a>, a service by <a href='http://www.smooz.io'>Smooz</a></small></div>"
+    email_text += "</body></html>"
+
+    var email_A = intro.person_A.email + " <" + intro.person_A.email + ">"
+    var email_B = intro.person_B.email + " <" + intro.person_B.email + ">"
+
+    //joint email
+    EmailServer.send({
+        text:    email_text,
+        from:    intro.user_name + " from " + intro.team_name + " <contact@smooz.io>",
+        to:      email_A + ", " + email_B,
+        bcc:      "Matthieu <matthieu@smooz.io>",
+        subject: "There is someone I'd like you to meet",
+        "content-type": 'text/html;charset=UTF-8'
+      }, function(err, message) {
+        if(err){
+          console.log(err)
+        }
+        else{
+          console.log(message)
+        }
+    })
+  }
 
   //new user creation - redirection from Slack
   app.get('/new', function(req, res) {
@@ -245,5 +378,10 @@ module.exports = function(app) {
         })
       }
     })
+  }
+
+  //utilities
+  function randomInt (max) {
+    return Math.floor(Math.random() * max);
   }
 }

@@ -10,11 +10,20 @@ var introSchema = new mongoose.Schema({
     team_id: {type: String, default: ''},
     user_name: {type: String, default: ''}, //sender of the intro
     user_id: {type: String, default: ''},   //sender of the intro
-    email_A: {type: String, default: ''},
-    email_B: {type: String, default: ''},
+    person_A: {
+      email: {type: String, default: ''},
+      status: {type: String, default: 'Pending'},
+      email_token: {type: String, default: ''} //random int between 1 and 10 000. Just to avoid simple copy-pasting of links
+    },
+    person_B: {
+      email: {type: String, default: ''},
+      status: {type: String, default: 'Pending'},
+      email_token: {type: String, default: ''}
+    },
     reason: {type: String, default: ''},
     status: {type: String, default: 'Pending'}
-  }, { timestamps: true }
+  },
+  { timestamps: true }
 );
 
 introSchema.plugin(findOrCreate);
