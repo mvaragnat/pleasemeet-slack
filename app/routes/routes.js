@@ -141,21 +141,47 @@ module.exports = function(app) {
 
   var send_permission_emails = function(user_name, team_name, email_A, email_B, reason, intro, cb){
 
-    var email_text = "<!DOCTYPE html><html><head><meta content='text/html;charset=UTF-8' http-equiv='Content-Type'/></head>"
-    email_text += "<body><div>Dear Madam/Sir,</div><div></div>"
-    email_text += "<div>" + user_name + " from " + team_name + " thought you might be interested in being introduced to someone new.</div><div></div>"
-    email_text += "<div><i>" + reason + "</i></div><div></div>"
-    email_text += "<div>Are you interested in this introduction?</div><div></div>"
+    var email_text = "<!DOCTYPE html><html><head><meta content='text/html;charset=UTF-8' http-equiv='Content-Type'/>"
+    email_text = "<style type='text/css'></style></head>"
+    email_text += "<body style='border: 0; margin: 0; padding: 0; min-width: 100%; background-color: #ffffff;' override='fix'>"
+    email_text += "<table border='0' cellpadding='0' cellspacing='0' width='100%''>"
+    email_text += "<tr><td align='center' class='icon' height='72' style='border: 0; margin: 0; padding: 0;'>"
+    email_text += "<a href=https://pleasemeet.herokuapp.com/ style='border: 0; margin: 0; padding: 0;' target='_blank'>"
+    email_text += "<img src='https://pleasemeet.herokuapp.com/images/pleasemeet_logo.png' width='150' style='border: 0; margin: 0; padding: 0;' /></a></td></tr>"
+    //spacer
+    email_text += "<tr><td height='22' style='border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;' width='100%'><div class='clear' style='height: 22px; width: 1px;'>&nbsp;</div></td></tr>"
+    email_text += "<tr><td>Dear Madam/Sir,</tr></td>"
+
+    email_text += "<tr><td height='22' style='border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;' width='100%'><div class='clear' style='height: 22px; width: 1px;'>&nbsp;</div></td></tr>"
+    email_text += "<tr><td>" + user_name + " from " + team_name + " thought you might be interested in being introduced to someone new.</td></tr>"
+
+    email_text += "<tr><td height='22' style='border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;' width='100%'><div class='clear' style='height: 22px; width: 1px;'>&nbsp;</div></td></tr>"
+    email_text += "<tr><td style='text-align: center; padding: 10px;' height='22'><span style='background-color: #eeeeee;'>" + reason + "</span></td></tr>"
+
+    email_text += "<tr><td height='22' style='border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;' width='100%'><div class='clear' style='height: 22px; width: 1px;'>&nbsp;</div></td></tr>"
+    email_text += "<tr><td>Are you interested in this introduction?</td></tr>"
+    email_text += "<tr><td height='22' style='border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;' width='100%'><div class='clear' style='height: 22px; width: 1px;'>&nbsp;</div></td></tr>"
 
     //this part is the only variant between the two emails--------
-    var email_text2_A = "<div><a href='http://pleasemeet.herokuapp.com/yes/" + intro._id + "/" + intro.person_A.email_token + "'>ACCEPT</a>"
-    email_text2_A += " or <a href='http://pleasemeet.herokuapp.com/no/" + intro._id + "/" + intro.person_A.email_token + "'>DECLINE</a></div>"
+    var email_text2_A = "<tr><td><span style='width:50px;height:45px;padding:5px;border-radius:6px;background:#ffffff;border-color:#cccccc #cccccc #cccccc;border-style:solid;border-width:1px 1px 3px' bgcolor='#ffffff' width='42' height='40'>"
+    email_text2_A += "<a href='http://pleasemeet.herokuapp.com/yes/" + intro._id + "/" + intro.person_A.email_token + "' target='_blank'>"
+    email_text2_A += "<span style='line-height:40px;text-decoration:none;font-size:18px;color:#e52c9f'>ACCEPT</span></a></span>&nbsp;&nbsp;"
 
-    var email_text2_B = "<div><a href='http://pleasemeet.herokuapp.com/yes/" + intro._id + "/" + intro.person_B.email_token + "'>ACCEPT</a>"
-    email_text2_B += " or <a href='http://pleasemeet.herokuapp.com/no/" + intro._id + "/" + intro.person_B.email_token + "'>DECLINE</a></div>"
+    email_text2_A += "<span style='width:50px;height:45px;padding:5px;border-radius:6px;background:#ffffff;border-color:#cccccc #cccccc #cccccc;border-style:solid;border-width:1px 1px 3px' bgcolor='#ffffff' width='42' height='40'>"
+    email_text2_A += "<a href='http://pleasemeet.herokuapp.com/no/" + intro._id + "/" + intro.person_A.email_token + "' target='_blank'>"
+    email_text2_A += "<span style='line-height:40px;text-decoration:none;font-size:18px;color:#e52c9f'>DECLINE</span></a></span></td></tr>"
+
+    var email_text2_B = "<tr><td><span style='width:50px;height:45px;padding:5px;border-radius:6px;background:#ffffff;border-color:#cccccc #cccccc #cccccc;border-style:solid;border-width:1px 1px 3px' bgcolor='#ffffff' width='42' height='40'>"
+    email_text2_B += "<a href='http://pleasemeet.herokuapp.com/yes/" + intro._id + "/" + intro.person_B.email_token + "' target='_blank'>"
+    email_text2_B += "<span style='line-height:40px;text-decoration:none;font-size:18px;color:#e52c9f'>ACCEPT</span></a></span>&nbsp;&nbsp;"
+
+    email_text2_B += "<span style='width:50px;height:45px;padding:5px;border-radius:6px;background:#ffffff;border-color:#cccccc #cccccc #cccccc;border-style:solid;border-width:1px 1px 3px' bgcolor='#ffffff' width='42' height='40'>"
+    email_text2_B += "<a href='http://pleasemeet.herokuapp.com/no/" + intro._id + "/" + intro.person_B.email_token + "' target='_blank'>"
+    email_text2_B += "<span style='line-height:40px;text-decoration:none;font-size:18px;color:#e52c9f'>DECLINE</span></a></span></td></tr>"
     //-------------------
 
-    var email_text3 = "<div><small>Discover <a href='http://pleasemeet.herokuapp.com'>Please Meet</a>, a service by <a href='http://www.smooz.io'>Smooz</a></small></div>"
+    var email_text3 = "<tr><td height='22' style='border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;' width='100%'><div class='clear' style='height: 22px; width: 1px;'>&nbsp;</div></td></tr>"
+    email_text3 += "<tr><td><small>Discover <a href='http://pleasemeet.herokuapp.com'>Please Meet</a>, a service by <a href='http://www.smooz.io'>Smooz</a></small></td></tr>"
     email_text3 += "</body></html>"
 
     //email to A
@@ -171,7 +197,7 @@ module.exports = function(app) {
         cb(err)
       }
       else{
-        console.log(message)
+        //console.log(message)
 
         //email to B
         EmailServer.send({
@@ -186,7 +212,7 @@ module.exports = function(app) {
               cb(err)
             }
             else{
-              console.log(message)
+              //console.log(message)
               cb()
             }
         })
@@ -275,11 +301,28 @@ module.exports = function(app) {
   }
 
   var send_intro_email = function(intro){
-    var email_text = "<!DOCTYPE html><html><head><meta content='text/html;charset=UTF-8' http-equiv='Content-Type'/></head>"
-    email_text += "<body><div>" + intro.user_name + ", from " + intro.team_name + ", thought you should be introduced to each other.</div><div></div>"
-    email_text += "<div><i>" + intro.reason + "</i></div><div></div>"
-    email_text += "<div>Please meet :-)</div><div></div>"
-    email_text += "<div><small>Discover <a href='http://pleasemeet.herokuapp.com'>Please Meet</a>, a service by <a href='http://www.smooz.io'>Smooz</a></small></div>"
+    var email_text = "<!DOCTYPE html><html><head><meta content='text/html;charset=UTF-8' http-equiv='Content-Type'/>"
+    email_text = "<style type='text/css'></style></head>"
+    email_text += "<body style='border: 0; margin: 0; padding: 0; min-width: 100%; background-color: #ffffff;' override='fix'>"
+    email_text += "<table border='0' cellpadding='0' cellspacing='0' width='100%''>"
+    email_text += "<tr><td align='center' class='icon' height='72' style='border: 0; margin: 0; padding: 0;'>"
+    email_text += "<a href=https://pleasemeet.herokuapp.com/ style='border: 0; margin: 0; padding: 0;' target='_blank'>"
+    email_text += "<img src='https://pleasemeet.herokuapp.com/images/pleasemeet_logo.png' width='150' style='border: 0; margin: 0; padding: 0;' /></a></td></tr>"
+    //spacer
+    email_text += "<tr><td height='22' style='border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;' width='100%'><div class='clear' style='height: 22px; width: 1px;'>&nbsp;</div></td></tr>"
+    email_text += "<tr><td>Dear Madam/Sir,</tr></td>"
+
+    email_text += "<tr><td height='22' style='border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;' width='100%'><div class='clear' style='height: 22px; width: 1px;'>&nbsp;</div></td></tr>"
+    email_text += "<tr><td>" + intro.user_name + " from " + intro.team_name + " thought you should be introduced to each other.</td></tr>"
+
+    email_text += "<tr><td height='22' style='border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;' width='100%'><div class='clear' style='height: 22px; width: 1px;'>&nbsp;</div></td></tr>"
+    email_text += "<tr><td style='text-align: center; padding: 10px;' height='22'><span style='background-color: #eeeeee;'>" + intro.reason + "</span></td></tr>"
+
+    email_text += "<tr><td height='22' style='border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;' width='100%'><div class='clear' style='height: 22px; width: 1px;'>&nbsp;</div></td></tr>"
+    email_text += "<tr><td>Please meet :-)</td></tr>"
+
+    email_text += "<tr><td height='22' style='border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;' width='100%'><div class='clear' style='height: 22px; width: 1px;'>&nbsp;</div></td></tr>"
+    email_text += "<tr><td><small>Discover <a href='http://pleasemeet.herokuapp.com'>Please Meet</a>, a service by <a href='http://www.smooz.io'>Smooz</a></small></td></tr>"
     email_text += "</body></html>"
 
     var email_A = intro.person_A.email + " <" + intro.person_A.email + ">"
@@ -298,7 +341,8 @@ module.exports = function(app) {
           console.log(err)
         }
         else{
-          console.log(message)
+          //console.log(message)
+          console.log("Intro sent")
         }
     })
   }
